@@ -1,0 +1,12 @@
+{
+    "scripts": {
+        "dev": "CRM_LOCATION=http://crm.dev:8000 gulp build",
+        "staging": "CRM_LOCATION=https://crm.pebblecloud.net gulp build",
+        "prod": "CRM_LOCATION=https://magni.mypebble.co.uk gulp build"
+    },
+    "dependencies": {
+        "gulp": "^3.9.1",
+        "gulp-copy": "^1.0.0",
+        "gulp-string-replace": "^0.4.0"
+    }
+}
