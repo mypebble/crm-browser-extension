@@ -1,0 +1,25 @@
+<div class="sidebar-container">
+<div class="col-xs-1 sidebar" style="background-color: <%- colour %>">
+    <% if(is_organisation) { %>
+        <% if (organisation_type == "school"){ %>
+            <img src="{{ crm_location }}/static/icons/school.svg" class="glyph">
+        <% } else { %>
+            <img src="{{ crm_location }}/static/icons/org.svg" class="glyph">
+        <% } %>
+    <% } else { %>
+        <img src="{{ crm_location }}/static/icons/person.svg" class="glyph">
+    <% } %>
+</div>
+<div class="sidebar-content sidebar-object">
+<h2>
+    <a target="_blank" href="{{ crm_location }}/#entity/<%- id %>">
+        <%- name %>
+    </a>
+</h2>
+<p class="object-details">
+    <%- postcode %>
+    <%- town %>
+    <%- telephone %>
+</p>
+</div>
+</div>

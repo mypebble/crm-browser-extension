@@ -1,0 +1,27 @@
+.sidebar{
+    background: #000;
+    padding: 5px;
+    text-align: center;
+    width: 30px;
+    min-width: 30px;
+
+    .glyph{
+        width: 25px;
+        height: 25px;
+    }
+}
+
+.sidebar-container{
+    display: flex;
+
+    .sidebar-content{
+        flex-grow: 1;
+        padding: 5px;
+        h2, p{
+            margin: 0px;
+        }
+        h2{
+            font-size: 16px;
+        }
+    }
+}
