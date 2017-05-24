@@ -2,6 +2,7 @@ function magniLog(msg){
     // Makes Magni's debug output stand out from Gmail
     console.log(`%c>> Magni: ${msg}`, 'background-color: #902C35; color: #FFF');
 }
+let magni = {};
 
 function updateSidebar(el, threadView){
     let emails = new Set();
@@ -20,14 +21,22 @@ function updateSidebar(el, threadView){
     }
     qs = qs.substr(1);
 
-    el.setAttribute("src", '{{ crm_location }}/sidebar?' + qs);
+    el.setAttribute("src", '{{ crm_location }}/sidebar/?' + qs);
 }
+
+chrome.runtime.onMessage.addListener(function(message){
+    magniLog(JSON.stringify(message));
+    if(message['message'] == 'sidebarRender'){
+        magni.el.style.height = (message['height'] + 15) + 'px';
+    }
+});
 
 InboxSDK.load('2', 'sdk_magni_429e6f5389').then(function(sdk){
     magniLog('Gmail extension active');
     sdk.Conversations.registerThreadViewHandler(function(threadView){
         let messagesLeftToLoad = threadView.getMessageViewsAll().length;
         let el = document.createElement("iframe");
+        magni.el = el;
         el.style.width = "200px";
         el.style.border = "0px";
 
@@ -39,7 +48,8 @@ InboxSDK.load('2', 'sdk_magni_429e6f5389').then(function(sdk){
 
         threadView.addSidebarContentPanel({
             title: "Magni",
-            el: el
+            el: el,
+            iconUrl: chrome.extension.getURL('icons/app-13.png')
         });
     });
 });

@@ -8,7 +8,8 @@
     },
     "permissions": [
         "https://mail.google.com/",
-        "https://inbox.google.com/"
+        "https://inbox.google.com/",
+        "{{ crm_location }}/"
     ],
     "content_scripts": [
         {
@@ -17,6 +18,18 @@
                 "extern/inboxsdk.js",
                 "js/gmail.js"
             ]
+        },
+        {
+            "matches": ["{{ crm_location }}/sidebar*"],
+            "js": [
+                "js/sidebar.js"
+            ],
+            "all_frames": true
         }
-    ]
+    ],
+    "background": {
+        "scripts": ["js/background.js"],
+        "persistent": false
+    },
+    "web_accessible_resources" : ["icons/app-48.png", "icons/app-13.png"]
 }

@@ -12,9 +12,9 @@ gulp.task('copy', function(){
 });
 
 gulp.task('build', ['copy'], function(){
-    return gulp.src('build/js/*.js')
+    return gulp.src(['build/**/*.js', 'build/manifest.json'])
         .pipe(replace(/\{\{ crm_location \}\}/g, process.env.CRM_LOCATION))
-        .pipe(gulp.dest('build/js/'));
+        .pipe(gulp.dest('build/'));
 });
 
 gulp.task('watch', ['build'], function(){
