@@ -11,6 +11,12 @@ function magniLog(msg){
     console.log(`%c>> Magni: ${msg}`, 'background-color: #902C35; color: #FFF');
 }
 
+let blacklist = [
+    'talktopebble.co.uk',
+    'google.com',
+    'mypebble.co.uk'
+]
+
 const BaseCollection = Bb.Collection.extend({
     state: 'initial',
     setState(state){
@@ -30,28 +36,6 @@ InboxSDK.load('2', 'sdk_magni_429e6f5389').then(function(sdk){
 
     magniLog('Gmail extension active');
 
-    sdk.Toolbars.registerToolbarButtonForThreadView({
-        title: "Clip to Magni",
-        iconUrl: chrome.extension.getURL('icons/dog.svg'),
-        section: 'METADATA_STATE',
-        onClick: function(event){
-            let threadView = event.threadView;
-            magniLog('Clip button activated');
-            magniLog('Thread id: ' + threadView.getThreadID());
-
-            // Open up CRM clipper box
-            let url = `{{ crm_location }}/integrations/gmail/add_thread/${threadView.getThreadID()}/`;
-
-            let w = 600;
-            let h = 400;
-            let screen = window.screen;
-            let left = (screen.width) ? (screen.width-w) / 2 : 100;
-            let top = (screen.height) ? (screen.height-h) / 2 : 100;
-            window.open(url, "share",
-             `width=${w},height=${h},left=${left},top=${top},scrollbars=yes`);
-        }
-    });
-
     sdk.Conversations.registerThreadViewHandler(function(threadView){
         let messagesLeftToLoad = threadView.getMessageViewsAll().length;
         let el = document.createElement("div");
@@ -59,7 +43,8 @@ InboxSDK.load('2', 'sdk_magni_429e6f5389').then(function(sdk){
 
         let view = new SideBar({
             el: el,
-            collection: col
+            collection: col,
+            threadID: threadView.getThreadID()
         });
         let emailsLoaded = new Set();
 
@@ -72,10 +57,19 @@ InboxSDK.load('2', 'sdk_magni_429e6f5389').then(function(sdk){
                 }
                 for(let email of emails){
                     if(!emailsLoaded.has(email)){
-                        magnijax("/entity/?email=" + encodeURIComponent(email['emailAddress']) + "&format=json", function(rsp){
-                            col.add(rsp['results']);
-                            view.render();
-                        });
+                        let bin = false;
+                        for(let domain of blacklist){
+                            if(email['emailAddress'].indexOf(domain) > 0){
+                                bin = true;
+                                break;
+                            }
+                        }
+                        if(!bin){
+                            magnijax("/entity/?email=" + encodeURIComponent(email['emailAddress']) + "&format=json", function(rsp){
+                                col.add(rsp['results']);
+                                view.render();
+                            });
+                        }
                         emailsLoaded.add(email);
                     }
                 }
