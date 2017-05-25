@@ -20,5 +20,5 @@
             ]
         }
     ],
-    "web_accessible_resources" : ["icons/app-48.png", "icons/app-13.png"]
+    "web_accessible_resources" : ["icons/app-48.png", "icons/app-13.png", "icons/dog.svg"]
 }

@@ -20,15 +20,38 @@ const EntityListView = Mn.CollectionView.extend({
     childView: EntityView
 });
 
+const SideBar = Mn.View.extend({
+    template: require('templates/sidebar.jst'),
+    regions: {
+        'list': '.list-slot'
+    },
+    onRender: function(){
+        this.showChildView('list', new EntityListView({
+            collection: this.getOption('collection')
+        }));
+    }
+})
+
 
 InboxSDK.load('2', 'sdk_magni_429e6f5389').then(function(sdk){
     magniLog('Gmail extension active');
+
+    sdk.Toolbars.registerToolbarButtonForThreadView({
+        title: "Clip to Magni",
+        iconUrl: chrome.extension.getURL('icons/dog.svg'),
+        section: 'METADATA_STATE',
+        onClick: function(event){
+            magniLog('Clip button activated');
+            console.log(event);
+        }
+    });
+
     sdk.Conversations.registerThreadViewHandler(function(threadView){
         let messagesLeftToLoad = threadView.getMessageViewsAll().length;
         let el = document.createElement("div");
         let col = new Backbone.Collection();
 
-        let view = new EntityListView({
+        let view = new SideBar({
             el: el,
             collection: col
         });
