@@ -3,6 +3,8 @@ import Bb from 'backbone';
 import $ from 'jquery';
 
 import SideBar from 'views/sidebar';
+import ComposeView from 'views/compose';
+import {blacklist, BaseCollection} from 'utils';
 
 require("style/main.scss");
 
@@ -10,20 +12,6 @@ function magniLog(msg){
     // Makes Magni's debug output stand out from Gmail
     console.log(`%c>> Magni: ${msg}`, 'background-color: #902C35; color: #FFF');
 }
-
-let blacklist = [
-    'talktopebble.co.uk',
-    'google.com',
-    'mypebble.co.uk'
-]
-
-const BaseCollection = Bb.Collection.extend({
-    state: 'initial',
-    setState(state){
-        this.state = state;
-        this.trigger('state', state);
-    }
-})
 
 InboxSDK.load('2', 'sdk_magni_429e6f5389').then(function(sdk){
     function magnijax(url, cb){
@@ -35,6 +23,32 @@ InboxSDK.load('2', 'sdk_magni_429e6f5389').then(function(sdk){
     }
 
     magniLog('Gmail extension active');
+
+    sdk.Compose.registerComposeViewHandler(function(composeView){
+        // Button needed for Inbox support
+        composeView.addButton({
+            title: "Clip to Magni",
+            iconUrl: chrome.extension.getURL('icons/dog.svg'),
+            onClick: function(event){
+                magniLog('Clip to Magni button');
+                let magniView = new ComposeView({
+                    el: event.dropdown.el,
+                    composeView: composeView
+                });
+                magniView.render();
+            },
+            hasDropdown: true
+        });
+        // Gmail lets us have custom UI <3
+        let statusBar = composeView.addStatusBar({
+            height: 100
+        });
+        let magniView = new ComposeView({
+            el: statusBar.el,
+            composeView: composeView
+        });
+        magniView.render();
+    });
 
     sdk.Conversations.registerThreadViewHandler(function(threadView){
         let messagesLeftToLoad = threadView.getMessageViewsAll().length;
@@ -82,6 +96,5 @@ InboxSDK.load('2', 'sdk_magni_429e6f5389').then(function(sdk){
             iconUrl: chrome.extension.getURL('icons/app-13.png')
         });
         view.render();
-        console.log(view);
     });
 });

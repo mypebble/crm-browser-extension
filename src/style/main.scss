@@ -35,3 +35,15 @@
         vertical-align: middle;
     }
 }
+
+.magni-compose-view {
+    padding: 0 5px;
+    font-size: 80%;
+    .help-link{
+        font-size: 75%;
+        text-decoration: underline;
+    }
+    p{
+        margin: 0;
+    }
+}
