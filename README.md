@@ -18,3 +18,17 @@ environment:
 These commands simply replace `{{ crm_location }}` in the extension code.
 
 You can now use the "load unpacked extension" on the build directory.
+
+## Publishing
+
+Append `zip` to the command and the extension will be zipped up and placed
+in the dist folder.
+
+For example:
+
+```
+npm run dev zip
+```
+
+Will produce a packaged chrome extension which will connect to the local
+development server.

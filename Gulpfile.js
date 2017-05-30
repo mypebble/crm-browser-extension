@@ -1,11 +1,12 @@
 'use strict';
 
-var gulp = require('gulp');
-var gulpCopy = require('gulp-copy');
-var replace = require('gulp-string-replace');
-var exec = require('child_process').exec;
+const gulp = require('gulp');
+const gulpCopy = require('gulp-copy');
+const replace = require('gulp-string-replace');
+const exec = require('child_process').exec;
+const zip = require('gulp-zip');
 
-var repo_root = __dirname + '/';
+const repo_root = __dirname + '/';
 
 gulp.task('copy', function(){
   return gulp.src(['js/*', 'extern/*', 'manifest.json', 'icons/*'])
@@ -27,5 +28,11 @@ gulp.task('build', ['copy', 'webpack'], function(){
 });
 
 gulp.task('watch', ['build'], function(){
-  gulp.watch('./js/*', ['build']);
+    gulp.watch('./js/*', ['build']);
+});
+
+gulp.task('zip', ['build'], function(){
+    return gulp.src('build/**/*')
+        .pipe(zip('extension.zip'))
+        .pipe(gulp.dest('dist'));
 });
