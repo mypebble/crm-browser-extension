@@ -1,0 +1,9 @@
+<% if(is_organisation) { %>
+    <% if (organisation_type == "school"){ %>
+        <img src="{{ crm_location }}/static/icons/school.svg" class="glyph">
+    <% } else { %>
+        <img src="{{ crm_location }}/static/icons/org.svg" class="glyph">
+    <% } %>
+<% } else { %>
+    <img src="{{ crm_location }}/static/icons/person.svg" class="glyph">
+<% } %>

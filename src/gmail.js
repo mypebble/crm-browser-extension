@@ -31,6 +31,14 @@ InboxSDK.load('2', 'sdk_magni_429e6f5389').then(function(sdk){
             iconUrl: chrome.extension.getURL('icons/dog.svg'),
             onClick: function(event){
                 magniLog('Clip to Magni button');
+                if(composeView.isInlineReplyForm() && document.location.hostname == "inbox.google.com"){
+                    composeView.popOut();
+                    sdk.ButterBar.showError({
+                        text: "Click the Magni button again (blame Google Inbox)"
+                    })
+                    console.log('>> Magni: Popout Compose View');
+                    return;
+                }
                 let magniView = new ComposeView({
                     el: event.dropdown.el,
                     composeView: composeView

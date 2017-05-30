@@ -4,11 +4,20 @@ import $ from 'jquery';
 
 const EntityView = Mn.View.extend({
     template: require('templates/compose_entity.jst'),
-    ui: {
-        'addButton': '.btn-add'
-    },
     triggers: {
-        'click @ui.addButton': 'add'
+        'click': 'add'
+    },
+    className: 'compose-entity',
+    onRender: function(){
+        if(this.model.get('active')){
+            this.$el.addClass('active');
+        } else{
+            this.$el.removeClass('active');
+        }
+    },
+    onAdd: function(){
+        this.model.set('active', !this.model.get('active'));
+        this.render();
     }
 });
 
@@ -36,12 +45,16 @@ export default Mn.View.extend({
         this.showChildView('organisations', entityListView);
         this.listenTo(entityListView, 'add', function(model){
             // TODO: Make this work properly
-            this.composeView.setBccRecipients(['magni+' + model.get('id') + '@talktopebble.co.uk']);
+            let bcc = this.collection.where(function(model){
+                return model.get('active');
+            }).map(function(model){
+                return 'magni+' + model.get('id') + '@talktopebble.co.uk'
+            });
+            this.composeView.setBccRecipients(bcc);
         });
 
-        console.log(this.composeView.isInlineReplyForm());
         if(this.composeView.isInlineReplyForm() && document.location.hostname == "inbox.google.com"){
-            return; // TODO: Handle this better
+            return;
         }
 
         this.composeView.on('toContactAdded', () => {
