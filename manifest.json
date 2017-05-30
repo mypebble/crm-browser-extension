@@ -4,7 +4,7 @@
     "version": "1.0",
     "description": "The official Magni browser extension adds super-powers to the Magni CRM",
     "icons": {
-        "48": "icons/icon.png"
+        "48": "icons/app-48.png"
     },
     "permissions": [
         "https://mail.google.com/",
