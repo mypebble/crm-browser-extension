@@ -38,6 +38,13 @@ export default Mn.View.extend({
     onRender: function(){
         this.composeView = this.getOption('composeView');
 
+        let parent = this.$el;
+        if(parent.is(".inboxsdk__compose_statusbar")){
+            parent.addClass('magni-status-view').css(
+                'background-image', `url('${chrome.extension.getURL("icons/dog-faded.svg")}')`)
+        }
+        console.log(parent.attr('class'));
+
         this.collection = new BaseCollection();
         const entityListView = new EntityListView({
             collection: this.collection
