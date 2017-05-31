@@ -80,3 +80,17 @@
         }
     }
 }
+
+.dropdown {
+    width: 150px;
+    position: absolute;
+
+    input{
+        width: 150px;
+    }
+    .compose-entity{
+        background: #EEE;
+        display: block;
+        width: 150px;
+    }
+}

@@ -2,6 +2,8 @@ import Mn from 'backbone.marionette';
 import {blacklist, BaseCollection, EmptyView} from 'utils';
 import $ from 'jquery';
 
+import DropdownView from 'views/dropdown';
+
 const EntityView = Mn.View.extend({
     template: require('templates/compose_entity.jst'),
     triggers: {
@@ -32,7 +34,8 @@ const EntityListView = Mn.CollectionView.extend({
 export default Mn.View.extend({
     template: require('templates/compose.jst'),
     regions: {
-        'organisations': '.organisations-slot'
+        'organisations': '.organisations-slot',
+        'dropdown': '.dropdown-slot'
     },
 
     onRender: function(){
@@ -44,6 +47,8 @@ export default Mn.View.extend({
                 'background-image', `url('${chrome.extension.getURL("icons/dog-faded.svg")}')`)
         }
         console.log(parent.attr('class'));
+
+        this.showChildView('dropdown', new DropdownView());
 
         this.collection = new BaseCollection();
         const entityListView = new EntityListView({
