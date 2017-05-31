@@ -92,5 +92,9 @@
         background: #EEE;
         display: block;
         width: 150px;
+        overflow: hidden;
+        height: 25px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 }

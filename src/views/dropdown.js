@@ -10,11 +10,17 @@ const EntityItem = Mn.View.extend({
     },
     deselect: function(){
         this.$el.removeClass('active');
+    },
+    triggers: {
+        'click': 'select'
     }
 });
 
 const EntityList = Mn.CollectionView.extend({
-    childView: EntityItem
+    childView: EntityItem,
+    onChildviewSelect: function(child){
+        this.trigger(child.model)
+    }
 });
 
 export default Mn.View.extend({
@@ -59,9 +65,15 @@ export default Mn.View.extend({
         }
     },
 
+    select: function(){
+        this.trigger('select', this.collection.at(this.currentItem));
+        this.collection.reset();
+        this.ui.input.val('');
+    },
+
     onInput: _.debounce(function(){
         this.collection.fetch({
-            data: { q: this.ui.input.val() }
+            data: { search: this.ui.input.val() }
         })
     }, 500),
 
@@ -84,6 +96,9 @@ export default Mn.View.extend({
         });
         this.dropdown = new EntityList({
             collection: this.collection
+        });
+        this.listenTo(this.dropdown, 'select', function(model){
+            this.trigger('select', model)
         });
         this.showChildView('dropdown', this.dropdown);
     }

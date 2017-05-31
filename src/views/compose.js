@@ -38,6 +38,15 @@ export default Mn.View.extend({
         'dropdown': '.dropdown-slot'
     },
 
+    updateBCC: function(){
+        let bcc = this.collection.where(function(model){
+            return model.get('active');
+        }).map(function(model){
+            return 'magni+' + model.get('id') + '@talktopebble.co.uk'
+        });
+        this.composeView.setBccRecipients(bcc);
+    },
+
     onRender: function(){
         this.composeView = this.getOption('composeView');
 
@@ -46,9 +55,14 @@ export default Mn.View.extend({
             parent.addClass('magni-status-view').css(
                 'background-image', `url('${chrome.extension.getURL("icons/dog-faded.svg")}')`)
         }
-        console.log(parent.attr('class'));
 
-        this.showChildView('dropdown', new DropdownView());
+        const dropdown = new DropdownView();
+        this.showChildView('dropdown', dropdown);
+        this.listenTo(dropdown, 'select', function(model){
+            model.set('active', true);
+            this.collection.push(model);
+            this.updateBCC();
+        });
 
         this.collection = new BaseCollection();
         const entityListView = new EntityListView({
@@ -56,13 +70,7 @@ export default Mn.View.extend({
         });
         this.showChildView('organisations', entityListView);
         this.listenTo(entityListView, 'add', function(model){
-            // TODO: Make this work properly
-            let bcc = this.collection.where(function(model){
-                return model.get('active');
-            }).map(function(model){
-                return 'magni+' + model.get('id') + '@talktopebble.co.uk'
-            });
-            this.composeView.setBccRecipients(bcc);
+            this.updateBCC();
         });
 
         if(this.composeView.isInlineReplyForm() && document.location.hostname == "inbox.google.com"){
