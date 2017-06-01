@@ -11,15 +11,18 @@ const EntityItem = Mn.View.extend({
     deselect: function(){
         this.$el.removeClass('active');
     },
+    ui: {
+        'item': '.item'
+    },
     triggers: {
-        'click': 'select'
+        'click @ui.item': 'select'
     }
 });
 
 const EntityList = Mn.CollectionView.extend({
     childView: EntityItem,
     onChildviewSelect: function(child){
-        this.trigger(child.model)
+        this.trigger('select', child.model)
     }
 });
 
@@ -42,7 +45,7 @@ export default Mn.View.extend({
         'focus @ui.input': 'show'
     },
 
-    onHide: _.delay(function(){
+    onHide: _.debounce(function(){
         this.ui.dropdown.hide();
     }, 100),
 
@@ -92,13 +95,10 @@ export default Mn.View.extend({
     }, 500),
 
     refreshDropdown: function(){
-        if(this.oldItem != -1){
-            this.dropdown.children.findByIndex(this.oldItem).deselect();
-        }
+        this.$('.compose-entity').removeClass('active');
         if(this.currentItem != -1){
             this.dropdown.children.findByIndex(this.currentItem).select();
         }
-        this.oldItem = this.currentItem;
     },
 
     onRender: function(){

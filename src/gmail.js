@@ -95,6 +95,7 @@ InboxSDK.load('2', 'sdk_magni_429e6f5389').then(function(sdk){
             });
         }
 
+        // Attach to entity listener (using gmail code)
         SidebarChannel.on('attachToEntity', function(model){
             magniLog('Attach to Entity');
             let emails = new Set();
@@ -147,7 +148,8 @@ InboxSDK.load('2', 'sdk_magni_429e6f5389').then(function(sdk){
                         }
                     }
                 ]
-            })
+            });
+            $("input", el).get(0).click();
         });
 
         threadView.addSidebarContentPanel({
