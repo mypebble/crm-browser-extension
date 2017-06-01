@@ -1,10 +1,14 @@
 import Mn from 'backbone.marionette';
 import Bb from 'backbone';
+import Radio from 'backbone.radio';
 import $ from 'jquery';
 
 import SideBar from 'views/sidebar';
 import ComposeView from 'views/compose';
-import {blacklist, BaseCollection} from 'utils';
+import {blacklisted, BaseCollection, } from 'utils';
+import AuthService from 'auth';
+
+const SidebarChannel = Radio.channel('sidebar');
 
 require("style/main.scss");
 
@@ -79,14 +83,7 @@ InboxSDK.load('2', 'sdk_magni_429e6f5389').then(function(sdk){
                 }
                 for(let email of emails){
                     if(!emailsLoaded.has(email)){
-                        let bin = false;
-                        for(let domain of blacklist){
-                            if(email['emailAddress'].indexOf(domain) > 0){
-                                bin = true;
-                                break;
-                            }
-                        }
-                        if(!bin){
+                        if(!blacklisted(email)){
                             magnijax("/entity/?email=" + encodeURIComponent(email['emailAddress']) + "&format=json", function(rsp){
                                 col.add(rsp['results']);
                                 view.render();
@@ -97,6 +94,61 @@ InboxSDK.load('2', 'sdk_magni_429e6f5389').then(function(sdk){
                 }
             });
         }
+
+        SidebarChannel.on('attachToEntity', function(model){
+            magniLog('Attach to Entity');
+            let emails = new Set();
+            for(let message of threadView.getMessageViewsAll()){
+                if(!blacklisted(message.getSender())){
+                    emails.add(message.getSender());
+                }
+                for(let email of message.getRecipients()){
+                    if(!blacklisted(email)){
+                        emails.add(email);
+                    }
+                }
+            }
+            let el = $("<div>").html(require('templates/attach_to_entity.jst')({
+                emails: emails.values(),
+                name: model.get('name')
+            }));
+            sdk.Widgets.showModalView({   
+                el: el.get(0),
+                title: 'Attach to Entity',
+                buttons: [
+                    {
+                        text: 'Attach',
+                        title: 'Attach this entity to the selected email address',
+                        onClick: function(e){
+                            e.modalView.close();
+                            AuthService.requireAuth(function(){
+                                AuthService.ajax({
+                                    url: `{{ crm_location }}/entity/${model.get('id')}/?format=json`,
+                                    method: 'PUT',
+                                    data: {
+                                        'email': $('input:checked', el).val()
+                                    },
+                                    success: function(rsp){
+                                        sdk.ButterBar.showError({
+                                            text: "Attached to entity"
+                                        });
+                                        col.add(new Bb.Model(rsp));
+                                    }
+                                });
+                            });
+                        },
+                        type: 'PRIMARY_ACTION'
+                    },
+                    {
+                        text: 'Cancel',
+                        title: 'Cancel this operation',
+                        onClick: function(e){
+                            e.modalView.close();
+                        }
+                    }
+                ]
+            })
+        });
 
         threadView.addSidebarContentPanel({
             title: "Magni Contacts",

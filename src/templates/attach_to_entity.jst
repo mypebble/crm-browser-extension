@@ -1,0 +1,13 @@
+<p>
+    Which email address do you wish to attach to <%- name %>?
+</p>
+<form>
+    <% for(let email of emails){ %>
+    <div>
+        <label>
+            <input type="radio" id="attachToEmail" name="attachToEmail" value="<%- email['emailAddress'] %>" />
+            <%- email['emailAddress'] %>
+        </label>
+    </div>
+    <% } %>
+</form>

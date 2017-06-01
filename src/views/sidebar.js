@@ -1,5 +1,10 @@
 import Mn from 'backbone.marionette';
+import Radio from 'backbone.radio';
+
 import {EmptyView} from 'utils';
+import DropdownView from 'views/dropdown';
+
+const SidebarChannel = Radio.channel('sidebar');
 
 const EntityView = Mn.View.extend({
     template: require('templates/entity_item.jst')
@@ -7,11 +12,6 @@ const EntityView = Mn.View.extend({
 
 const EntityListView = Mn.CollectionView.extend({
     childView: EntityView,
-    childViewOptions: function(){
-        return {
-            threadID: this.getOption('threadID')
-        }
-    },
     emptyView: EmptyView,
     emptyViewOptions: function(){
         return {
@@ -26,12 +26,18 @@ const EntityListView = Mn.CollectionView.extend({
 export default Mn.View.extend({
     template: require('templates/sidebar.jst'),
     regions: {
-        'list': '.list-slot'
+        'list': '.list-slot',
+        'dropdown': '.dropdown-slot'
     },
     onRender: function(){
         this.showChildView('list', new EntityListView({
             collection: this.getOption('collection'),
-            threadID: this.getOption('threadID')
         }));
+
+        let dropdown = new DropdownView();
+        this.showChildView('dropdown', dropdown);
+        this.listenTo(dropdown, 'select', function(model){
+            SidebarChannel.trigger('attachToEntity', model);
+        });
     }
 });

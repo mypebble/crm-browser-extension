@@ -31,12 +31,23 @@ export default Mn.View.extend({
     },
 
     ui: {
-        'input': 'input'
+        'input': 'input',
+        'dropdown': '.dropdown-slot'
     },
 
     triggers: {
         'keyup @ui.input': 'input',
-        'change @ui.input': 'input'
+        'change @ui.input': 'input',
+        'blur @ui.input': 'hide',
+        'focus @ui.input': 'show'
+    },
+
+    onHide: _.delay(function(){
+        this.ui.dropdown.hide();
+    }, 100),
+
+    onShow: function(){
+        this.ui.dropdown.show();
     },
 
     events: {
@@ -72,9 +83,12 @@ export default Mn.View.extend({
     },
 
     onInput: _.debounce(function(){
-        this.collection.fetch({
-            data: { search: this.ui.input.val() }
-        })
+        if(this.ui.input.val() == ""){
+            this.collection.reset();
+            return;
+        }
+        this.collection.search = this.ui.input.val();
+        this.collection.fetch();
     }, 500),
 
     refreshDropdown: function(){

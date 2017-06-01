@@ -53,30 +53,31 @@
     p{
         margin: 0;
     }
-    .compose-entity{
+}
+
+.compose-entity{
+    display: inline-block;
+    padding: 3px;
+    border: 1px solid transparent;
+    margin-right: 5px;
+    cursor: pointer;
+
+    &.active{
+        border-color: #CCC;
+        background: #FFF;
+    }
+
+    .compose-entity-glyph{
         display: inline-block;
+        margin-top: -3px;
+        margin-left: -3px;
+        margin-bottom: -3px;
         padding: 3px;
-        border: 1px solid transparent;
-        margin-right: 5px;
-        cursor: pointer;
-
-        &.active{
-            border-color: #CCC;
-            background: #FFF;
-        }
-
-        .compose-entity-glyph{
-            display: inline-block;
-            margin-top: -3px;
-            margin-left: -3px;
-            margin-bottom: -3px;
-            padding: 3px;
-            margin-right: 3px;
-            img{
-                width: 26px;
-                height: 26px;
-                vertical-align: middle;
-            }
+        margin-right: 3px;
+        img{
+            width: 26px;
+            height: 26px;
+            vertical-align: middle;
         }
     }
 }

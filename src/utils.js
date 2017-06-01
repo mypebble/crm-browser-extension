@@ -23,3 +23,18 @@ export const EmptyView = Mn.View.extend({
         };
     }
 })
+
+/**
+ * Returns true if the email is blacklisted
+ * @param {string} email 
+ */
+export function blacklisted(email){
+    let bin = false;
+    for(let domain of blacklist){
+        if(email['emailAddress'].indexOf(domain) > 0){
+            bin = true;
+            break;
+        }
+    }
+    return bin;
+}

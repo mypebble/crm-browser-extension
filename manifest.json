@@ -9,7 +9,8 @@
     "permissions": [
         "https://mail.google.com/",
         "https://inbox.google.com/",
-        "{{ crm_location }}/"
+        "{{ crm_location }}/",
+        "storage"
     ],
     "content_scripts": [
         {
@@ -22,6 +23,6 @@
     ],
     "web_accessible_resources" : [
         "icons/app-48.png", "icons/app-13.png", "icons/dog.svg",
-        "icons/dog-faded.svg"
+        "icons/dog-faded.svg", "assets/auth_finish.html"
     ]
 }

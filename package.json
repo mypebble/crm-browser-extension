@@ -1,8 +1,8 @@
 {
     "scripts": {
-        "dev": "CRM_LOCATION=http://crm.dev:8000 gulp build",
-        "staging": "CRM_LOCATION=https://crm.pebblecloud.net gulp build",
-        "prod": "CRM_LOCATION=https://magni.mypebble.co.uk gulp build"
+        "dev": "CRM_LOCATION=http://crm.dev:8000 KEY_LOCATION=keys/dev.json gulp build",
+        "staging": "CRM_LOCATION=https://crm.pebblecloud.net KEY_LOCATION=keys/staging.json gulp build",
+        "prod": "CRM_LOCATION=https://magni.mypebble.co.uk KEY_LOCATION=keys/prod.json gulp build"
     },
     "dependencies": {
         "babel-core": "^6.24.1",
