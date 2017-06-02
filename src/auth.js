@@ -29,8 +29,8 @@ export default {
                             cb();
                             clearInterval(int);
                         }
-                    }, 500);
-                });
+                    });
+                }, 1000);
             } else{
                 cb();
             }
@@ -42,16 +42,20 @@ export default {
             let authToken = store['authToken'];
             global.authToken = authToken;
             if(new Date().getTime() > authToken['expires']){
-                console.log('refresh');
                 $.post('{{ crm_location }}/oauth/token/', {
                     'grant_type': 'refresh_token',
                     'scope': 'read write',
-                    'client_id': this.credentials.client_id,
-                    'client_secret': this.credentials.client_secret,
+                    'client_id': this.creds.client_id,
+                    'client_secret': this.creds.client_secret,
                     'refresh_token': authToken['refresh_token']
                 }, function(rsp){
-                    console.log(rsp);
-                    alert('refresh token!!!');
+                    let d = new Date();
+                    d.setSeconds(d.getSeconds() + rsp['expires_in']);
+                    rsp['expires'] = d.getTime();
+                    global.authToken = rsp;
+                    chrome.storage.local.set({'authToken': rsp}, function(){
+                        $.ajax.apply($, args);
+                    });
                 });
             } else{
                 return $.ajax.apply($, args);

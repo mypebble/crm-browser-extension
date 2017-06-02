@@ -29,6 +29,19 @@ export default Mn.View.extend({
         'list': '.list-slot',
         'dropdown': '.dropdown-slot'
     },
+
+    ui: {
+        'addNewEntity': '.btn-add-new-entity'
+    },
+
+    triggers: {
+        'click @ui.addNewEntity': 'addNewEntity'
+    },
+
+    onAddNewEntity: function(){
+        SidebarChannel.trigger('addNewEntity');
+    },
+
     onRender: function(){
         this.showChildView('list', new EntityListView({
             collection: this.getOption('collection'),

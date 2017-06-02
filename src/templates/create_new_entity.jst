@@ -1,0 +1,44 @@
+<form>
+    <table class="crm-table-form">
+        <tr>
+            <td><label for="name">Name</label></td>
+            <td><input type="text" class="name-field" name="name" id="name" /></td>
+        </tr>
+        <tr>
+            <td><label for="type">Type</label></td>
+            <td>
+                <div>
+                    <label class="checkbox">
+                        <input type="radio" name="what" value="person" />
+                        Person
+                    </label>
+                </div>
+                <div>
+                    <label class="checkbox">
+                        <input type="radio" name="what" value="school" />
+                        School
+                    </label>
+                </div>
+                <div>
+                    <label class="checkbox">
+                        <input type="radio" name="what" value="other" />
+                        Other
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="email">Email Address</label></td>
+            <td>
+                <% for(let email of emails){ %>
+                <div>
+                    <label>
+                        <input type="radio" id="attachToEmail" name="attachToEmail" value="<%- email['emailAddress'] %>" />
+                        <%- email['emailAddress'] %>
+                    </label>
+                </div>
+                <% } %>
+            </td>
+        </tr>
+    </table>
+</form>
