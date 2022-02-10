@@ -17,7 +17,7 @@
         "gulp-string-replace": "^0.4.0",
         "gulp-zip": "^4.0.0",
         "jquery": "^3.2.1",
-        "node-sass": "^4.5.3",
+        "node-sass": "^7.0.0",
         "sass-loader": "^6.0.5",
         "style-loader": "^0.18.1",
         "underscore-template-loader": "^0.7.3",
